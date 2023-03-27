@@ -1,3 +1,6 @@
+###################################################################
+###################################################################
+###################################################################
 ######## spark
 
 #!/bin/bash
@@ -21,7 +24,9 @@ source ~/.bashrc
 # Print the Spark version to verify the installation
 spark-submit --version
 
-
+###################################################################
+###################################################################
+###################################################################
 ########### delta
 
 #!/bin/bash
@@ -37,6 +42,9 @@ sudo mv delta-core_2.12-1.0.0.jar /usr/local/delta
 pip install pyspark
 pip install delta-spark
 
+###################################################################
+###################################################################
+###################################################################
 ######## minio
 
 #!/bin/bash
@@ -103,4 +111,34 @@ sudo systemctl enable minio
 
 # Print the MinIO version to verify the installation
 minio version
+
+###################################################################
+###################################################################
+###################################################################
+######## presto
+
+#!/bin/bash
+
+# Add the Presto repository
+wget https://repo1.maven.org/maven2/io/prestosql/presto-server/0.258/presto-server-0.258.tar.gz
+tar -zxvf presto-server-0.258.tar.gz -C /usr/local/
+ln -s /usr/local/presto-server-0.258 /usr/local/presto
+
+# Create the Presto user and group
+groupadd presto
+useradd -g presto presto
+
+# Set up the Presto configuration
+mkdir -p /etc/presto/catalog
+cp /usr/local/presto-server-0.258/etc/node.properties /etc/presto/
+cp /usr/local/presto-server-0.258/etc/jvm.config /etc/presto/
+cp /usr/local/presto-server-0.258/etc/config.properties /etc/presto/
+cp /usr/local/presto-server-0.258/etc/log.properties /etc/presto/
+chown -R presto:presto /etc/presto
+
+# Start the Presto server
+sudo -u presto /usr/local/presto-server-0.258/bin/launcher start
+
+echo "Presto is now installed and running"
+
 
